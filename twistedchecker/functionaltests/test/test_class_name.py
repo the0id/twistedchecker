@@ -7,19 +7,6 @@
 from twisted.trial import unittest
 
 
-# Classes that should not be checked by the checker.
-class SampleTestMixin(object):
-    """
-    A sample mixin with additional assertion helpers.
-    """
-    def assertSomething(self):
-        """
-        An assertion helper.
-        """
-        pass
-
-
-
 class SpecializedTestCaseSubclass(unittest.TestCase):
     """
     A specialized TestCase subclass that test classes can
@@ -34,8 +21,86 @@ class SpecializedTestCaseSubclass(unittest.TestCase):
         pass
 
 
+class SomeTestMixin(object):
+    """
+    A mixin which does nothing.
+    """
 
+    def testLegacyName(self):
+        """
+        A test with old naming convention.
+        """
+
+#
+# Bad examples
+#
+class SomethingTestCase(unittest.TestCase):
+    """
+    An incorrectly named test class.
+    """
+    def test_something(self):
+        """
+        A test method.
+        """
+        pass
+
+
+
+class SomethingElseTest(unittest.TestCase, SomeTestMixin):
+    """
+    Another incorrectly named test class.
+    """
+    def test_somethingElse(self):
+        """
+        A test method.
+        """
+        pass
+
+
+
+class TestFoo(SpecializedTestCaseSubclass):
+    """
+    One more incorrectly named test class.
+    """
+    def test_foo(self):
+        """
+        A test method.
+        """
+        pass
+
+
+
+class LegacyTestCase(unittest.TestCase):
+    """
+    An incorrectly named test class.
+    """
+    def testSomething(self):
+        """
+        A test method with old naming convention.
+        """
+
+
+#
 # Good examples
+#
+class SampleTestMixin(object):
+    """
+    A sample mixin with additional assertion helpers.
+    """
+    def assertSomething(self):
+        """
+        An assertion helper.
+        """
+        pass
+
+    def test_someTest(self):
+        """
+        Test from mixin.
+        """
+        pass
+
+
+
 class SomethingTests(unittest.TestCase):
     """
     A correctly named test class.
@@ -47,7 +112,7 @@ class SomethingTests(unittest.TestCase):
 
 
 
-class SomethingElseTests(SampleTestMixin, unittest.TestCase):
+class SomethingElseTests(unittest.TestCase, SampleTestMixin):
     """
     Another correctly named test class.
     """
@@ -69,37 +134,11 @@ class FooTests(SpecializedTestCaseSubclass):
 
 
 
-# Bad examples
-class SomethingTestCase(unittest.TestCase):
+class LegacyTests(SpecializedTestCaseSubclass):
     """
-    An incorrectly named test class.
+    One more correctly named with test methods after older convention.
     """
-    def test_something(self):
+    def testLegacyName(self):
         """
         A test method.
         """
-        pass
-
-
-
-class SomethingElseTest(SampleTestMixin, unittest.TestCase):
-    """
-    Another incorrectly named test class.
-    """
-    def test_somethingElse(self):
-        """
-        A test method.
-        """
-        pass
-
-
-
-class TestFoo(SpecializedTestCaseSubclass):
-    """
-    One more incorrectly named test class.
-    """
-    def test_foo(self):
-        """
-        A test method.
-        """
-        pass
