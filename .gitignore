@@ -1,0 +1,8 @@
+*.DS_Store
+_trial_temp
+*.pyc
+*.bak
+build/
+dist/
+*.egg-info/
+*~
