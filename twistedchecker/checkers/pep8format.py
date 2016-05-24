@@ -8,7 +8,10 @@ Twisted Coding Standard.
 """
 
 import sys
-import StringIO
+try:
+    import StringIO
+except:
+    from io import StringIO
 import re
 
 from pylint.interfaces import IASTNGChecker
