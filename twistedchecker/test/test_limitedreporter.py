@@ -1,5 +1,5 @@
 import os
-import StringIO
+import io
 
 from twisted.trial import unittest
 
@@ -27,7 +27,7 @@ class LimitedReporterTestCase(unittest.TestCase):
                                       "functionaltests", "indentation.py")
         # assert the test file exists
         self.assertTrue(os.path.exists(pathTestIndentation))
-        streamTestResult = StringIO.StringIO()
+        streamTestResult = io.StringIO()
         runner = Runner()
         runner.setOutput(streamTestResult)
         # defaultly, runner will use LimitedReporter as its output reporter

@@ -1,6 +1,6 @@
 import operator
 
-from pylint.interfaces import IASTNGChecker
+from pylint.interfaces import IAsteroid
 from pylint.checkers import BaseChecker
 from logilab.astng.scoped_nodes import Class
 
@@ -18,7 +18,7 @@ class TestClassNameChecker(BaseChecker):
         'W9701': ('Test class names should end with Tests',
                   'Used for checking test class names.'),
     }
-    __implements__ = IASTNGChecker
+    __implements__ = IAsteroid
     name = 'testclassname'
     options = ()
 
@@ -31,7 +31,7 @@ class TestClassNameChecker(BaseChecker):
         if not isTestModule(node.name):
             return
 
-        objects = node.values()
+        objects = list(node.values())
         objects.sort(key=operator.attrgetter('lineno'))
         for obj in objects:
             if (isinstance(obj, Class) and self._isTestClass(obj) and

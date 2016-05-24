@@ -69,7 +69,7 @@ def _formatResults(moduleName, expectedResult, actualResult):
         headings.
     @rtype: L{str}
     """
-    i = itertools.izip_longest(
+    i = itertools.zip_longest(
         ['= Expected ='] + expectedResult.splitlines(),
         ['= Actual ='] + actualResult.splitlines(),
         fillvalue='')

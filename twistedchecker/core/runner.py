@@ -6,7 +6,7 @@ import sys
 import os
 
 try:
-    import StringIO
+    from StringIO import StringIO
 except:
     from io import StringIO
 
@@ -68,7 +68,7 @@ class Runner():
                            .cfgfile_parser.get("TWISTEDCHECKER", "disable")
                            .replace(" ", "").split(","))
         if disabledMessages != {""}:
-            map(self.linter.disable, disabledMessages)
+            list(map(self.linter.disable, disabledMessages))
             allowedMessages -= disabledMessages
         # set default output stream to stdout
         self.setOutput(sys.stdout)
@@ -150,7 +150,8 @@ class Runner():
                                         fromlist=["twistedchecker.checkers"]),
                              classname)
             instanceChecker = checker(self.linter)
-            allowedMessages += instanceChecker.msgs.keys()
+            allowedMessages += list(instanceChecker.msgs.keys())
+            print(instanceChecker)
             self.linter.register_checker(instanceChecker)
 
         self.restrictCheckers(allowedMessages)
@@ -204,7 +205,7 @@ class Runner():
 
         @checkerType: type of the checker
         """
-        for checker in sum(self.linter._checkers.values(), []):
+        for checker in sum(list(self.linter._checkers.values()), []):
             if isinstance(checker, checkerType):
                 return checker
         return None
@@ -305,7 +306,7 @@ class Runner():
             self.displayHelp()
         # Check for 'strict-epydoc' option.
         if self.allowOptions and not self.linter.option_value("strict-epydoc"):
-            map(self.linter.disable, ["W9203", "W9205"])
+            list(map(self.linter.disable, ["W9203", "W9205"]))
 
         # insert current working directory to the python path to have a correct
         # behaviour.
@@ -334,7 +335,7 @@ class Runner():
         """
         Prepare to run the checker and get diff results.
         """
-        self.streamForDiff = StringIO.StringIO()
+        self.streamForDiff = StringIO()
         self.linter.reporter.set_output(self.streamForDiff)
 
 

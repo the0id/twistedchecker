@@ -12,7 +12,7 @@ from logilab.astng import node_classes
 from logilab.astng import scoped_nodes
 from logilab.astng.exceptions import InferenceError
 
-from pylint.interfaces import IASTNGChecker
+from pylint.interfaces import IAstroidChecker
 from pylint.checkers.base import DocStringChecker as PylintDocStringChecker
 from pylint.checkers.base import NO_REQUIRED_DOC_RGX
 
@@ -97,7 +97,7 @@ class DocstringChecker(PylintDocStringChecker):
                'Used when a module, function, class or method '
                'has an empty docstring.'),
     }
-    __implements__ = IASTNGChecker
+    __implements__ = IAstroidChecker
     name = 'docstring'
     options = ()
 
