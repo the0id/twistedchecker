@@ -8,11 +8,8 @@ Twisted Coding Standard.
 """
 
 import sys
-try:
-    import io
-except:
-    from io import StringIO
 import re
+import io
 
 from pylint.interfaces import IAstroidChecker
 from pylint.checkers import BaseChecker
