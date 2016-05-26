@@ -136,11 +136,6 @@ class Runner():
         # We patch the default pylint format checker.
         patch_pylint_format.patch()
 
-        # add checkers for python 3
-        cfgfile = self.linter.cfgfile_parser
-        if (cfgfile.has_option("TWISTEDCHECKER", "check-python3") and
-            cfgfile.getboolean("TWISTEDCHECKER", "check-python3")):
-            self.checkers += ("python3.Python3Checker",)
         # register checkers
         allowedMessages = list(self.allowedMessagesFromPylint)
         for strChecker in self.checkers:
@@ -151,7 +146,6 @@ class Runner():
                              classname)
             instanceChecker = checker(self.linter)
             allowedMessages += list(instanceChecker.msgs.keys())
-            print(instanceChecker)
             self.linter.register_checker(instanceChecker)
 
         self.restrictCheckers(allowedMessages)
@@ -429,9 +423,9 @@ class Runner():
         @return: a list of warnings in string
         """
         lines = []
-        for modulename in warnings:
+        for modulename in sorted(warnings):
             lines.append(self.prefixModuleName + modulename)
-            lines.extend(warnings[modulename])
+            lines.extend(sorted(warnings[modulename], key=lambda x: x.split(":")[1]))
 
         return "\n".join(lines)
 

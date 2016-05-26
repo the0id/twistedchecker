@@ -7,9 +7,9 @@ L{twistedchecker.functionaltests}.
 """
 
 from functools import update_wrapper
-import io
 import itertools
 import os
+import sys
 
 from twisted.python.reflect import filenameToModuleName
 from twisted.trial import unittest
@@ -17,6 +17,13 @@ from twisted.trial import unittest
 import twistedchecker
 from twistedchecker.core.runner import Runner
 from twistedchecker.reporters.test import TestReporter
+
+try:
+    from itertools import zip_longest
+    from io import StringIO
+except:
+    from itertools import izip_longest as zip_longest
+    from StringIO import StringIO
 
 
 
@@ -69,9 +76,9 @@ def _formatResults(moduleName, expectedResult, actualResult):
         headings.
     @rtype: L{str}
     """
-    i = itertools.zip_longest(
-        ['= Expected ='] + expectedResult.splitlines(),
-        ['= Actual ='] + actualResult.splitlines(),
+    i = zip_longest(
+        ['= Expected ='] + expectedResult,
+        ['= Actual ='] + actualResult,
         fillvalue='')
 
     output = ['', moduleName]
@@ -96,7 +103,8 @@ def _parseLimitMessages(testFilePath):
         I{twistedchecker} message IDs.
     @rtype: L{tuple}
     """
-    firstline = open(testFilePath).readline()
+    with open(testFilePath) as f:
+        firstline = f.readline()
     if "enable" not in firstline and "disable" not in firstline:
         # Could not find enable or disable messages
         return
@@ -163,7 +171,7 @@ def _runTest(testCase, testFilePath):
     """
     pathResultFile = testFilePath.replace(".py", ".result")
     moduleName = filenameToModuleName(testFilePath)
-    outputStream = io.BytesIO()
+    outputStream = StringIO()
 
     runner = Runner()
     runner.allowOptions = False
@@ -184,8 +192,10 @@ def _runTest(testCase, testFilePath):
         exitCode = error.code
 
     # Check the results
-    expectedResult = open(pathResultFile).read().strip()
-    outputResult = outputStream.getvalue().strip()
+    with open(pathResultFile) as f:
+        expectedResult = sorted(f.read().strip().splitlines())
+
+    outputResult = sorted(outputStream.getvalue().strip().splitlines())
 
     try:
         testCase.assertEqual(expectedResult, outputResult)
