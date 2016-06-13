@@ -8,6 +8,7 @@ env:
   - TOX_ENV=pyflakes
   - TOX_ENV=check-manifest
   - TOX_ENV=py27-tests
+  - TOX_ENV=py35-tests
 
 # Dump trial log on failure.
 after_failure: "cat _trial_temp/test.log"
