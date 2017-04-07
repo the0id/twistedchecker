@@ -1,19 +1,23 @@
 language: python
 sudo: false
 
+matrix:
+  include:
+    - python: 3.5
+      env: TOXENV=pyflakes
+    - python: 3.5
+      env: TOXENV=check-manifest
+    - python: 2.7
+      env: TOXENV=py27-tests
+    - python: 3.5
+      env: TOXENV=py35-tests
+
+
 install:
-  - pip install tox codecov
-
-env:
-  - TOX_ENV=pyflakes
-  - TOX_ENV=check-manifest
-  - TOX_ENV=py27-tests
-
-# Dump trial log on failure.
-after_failure: "cat _trial_temp/test.log"
+  - python -m pip install tox codecov
 
 script:
-  - tox -c tox.ini -e $TOX_ENV
+  - python -m tox -c tox.ini -e $TOXENV
 
 after_script:
   - codecov
@@ -29,10 +33,11 @@ deploy:
   user: twistedchecker-robot
   password:
     secure: Ah71pNOKdOqiL4OuNW3R0XM4lz4wpqHVM5xLFr+rrHNjM4jEh+ZjSmkOH8HiWmE1rCWUFBomap0vuEL8de5lucHcPwpA9fXmXGlUrKcJfjEA7Qp/oSP5nmf8cLb1zS62e/SYoxC5jTRGpCAXd0PZd5Mu4QG7MJFmT5l1xz0q2eQ=
+  distributions: "sdist bdist_wheel"
   on:
     tags: true
-    # Only replease from a single job.
-    condition: "$TOX_ENV = py27-tests"
+    # Only release from a single job.
+    condition: "$TOXENV = py27-tests"
     # All branches is still required.
     # https://github.com/travis-ci/travis-ci/issues/1675
     all_branches: true
